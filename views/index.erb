@@ -1,0 +1,19 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+  <title><%= site_title %></title>
+</head>
+<body>
+  <h1><%= site_title %></h1>
+  <ul>
+    <% snippets.each do |snippet| %>
+  	<li>
+      <a href="/<%= snippet[:slug] %>"><%= snippet[:title] %></a>
+      <br />
+      Tags: <%= snippet[:tags] %>
+  	</li>
+  <% end %>
+  </ul>
+</body>
+</html>
