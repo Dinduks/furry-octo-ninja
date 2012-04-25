@@ -2,9 +2,17 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title></title>
+  <title><%= @site_title %></title>
+  <link rel="stylesheet" href="/stylesheets/bootstrap.min.css" />
 </head>
 <body>
+  <div id="navbar">
+    <div id="navbar-inner">
+      <div id="container">
+        <a href="/" class="brand"><%= @site_title %></a>
+      </div>
+    </div>
+  </div>
   <%= yield %>
 </body>
 </html>
