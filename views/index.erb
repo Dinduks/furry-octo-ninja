@@ -1,13 +1,20 @@
 <%
-@site_title = site_title
+@site_name = site_name
+@site_title = site_name
 %>
-<h1><%= site_title %></h1>
-<ul>
+<h1><%= site_name %></h1>
+<table class="table">
   <% snippets.each do |snippet| %>
-  <li>
-    <a href="/<%= snippet[:slug] %>"><%= snippet[:title] %></a>
-    <br />
-    Tags: <%= snippet[:tags] %>
-  </li>
+  <tr>
+    <td>
+      <a href="/<%= snippet[:slug] %>"><%= snippet[:title] %></a>
+    </td>
+    <td>
+      Tags:
+      <% snippet[:tags].each do |t| %>
+        <%= t %>
+      <% end %>
+    </td>
+  </tr>
 <% end %>
-</ul>
+</table>

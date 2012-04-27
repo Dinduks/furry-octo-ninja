@@ -1,5 +1,7 @@
 <%
-@site_title = snippet[:title]
+@site_name  = site_name
+@site_title = snippet[:title] + ' - ' + site_name
+@page_title = snippet[:title]
 %>
 <div id="wrapper">
   <%= snippet[:body] %>

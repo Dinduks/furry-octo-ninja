@@ -15,11 +15,11 @@ get '/' do
     snippet = {}
     snippet[:slug]  = s.slice(0..-4)
     snippet[:title] = IO.readlines(filename)[1]
-    snippet[:tags]  = IO.readlines(filename)[2]
+    snippet[:tags]  = IO.readlines(filename)[2].split('-').each { |t| t.strip! }
     snippets << snippet
   end
   erb :index, :locals => {
-    :site_title => settings.config['site_title'],
+    :site_name  => settings.config['site_name'],
     :author     => settings.config['author_name'],
     :snippets   => snippets,
   }
@@ -29,10 +29,11 @@ get '/:slug' do
   filename = settings.config['snippets_folder'] + '/' + params[:slug] + '.md'
   snippet = {}
   snippet[:title] = IO.readlines(filename)[1]
-  snippet[:tags]  = IO.readlines(filename)[2]
+  snippet[:tags]  = IO.readlines(filename)[2].split('-').trim
   snippet[:body] = GitHub::Markup.render(filename, File.read(filename))
   erb :show, :locals => {
-    :snippet => snippet,
-    :author  => settings.config['author_name'],
+    :snippet   => snippet,
+    :author    => settings.config['author_name'],
+    :site_name => settings.config['site_name'],
   }
 end

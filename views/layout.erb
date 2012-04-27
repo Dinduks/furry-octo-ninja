@@ -4,15 +4,18 @@
   <meta charset="UTF-8">
   <title><%= @site_title %></title>
   <link rel="stylesheet" href="/stylesheets/bootstrap.min.css" />
+  <link rel="stylesheet" href="/stylesheets/main.css" />
 </head>
 <body>
-  <div id="navbar">
-    <div id="navbar-inner">
-      <div id="container">
-        <a href="/" class="brand"><%= @site_title %></a>
+  <div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+      <div class="container">
+        <a href="/" class="brand"><%= @site_name %></a>
       </div>
     </div>
   </div>
-  <%= yield %>
+  <div class="container">
+    <%= yield %>
+  </div>
 </body>
 </html>
