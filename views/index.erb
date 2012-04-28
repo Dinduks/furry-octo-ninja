@@ -4,14 +4,14 @@
 %>
 <h1><%= site_name %></h1>
 <table class="table">
-  <% snippets.each do |snippet| %>
+  <% @snippets.each do |snippet| %>
   <tr>
     <td>
       <a href="/<%= snippet[:slug] %>"><%= snippet[:title] %></a>
     </td>
     <td>
       Tags:
-      <% snippet[:tags].each do |t| %>
+      <% snippet.tags.each do |t| %>
         <%= t %>
       <% end %>
     </td>

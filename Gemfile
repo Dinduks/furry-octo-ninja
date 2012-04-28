@@ -1,3 +1,6 @@
 gem 'sinatra'
 gem 'sinatra-contrib'
 gem 'github-markup'
+gem 'data_mapper'
+gem 'sqlite3'
+gem 'dm-sqlite-adapter'
