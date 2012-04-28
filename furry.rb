@@ -23,6 +23,18 @@ get '/' do
   }
 end
 
+get '/new' do
+  @snippet = Snippet.new
+  erb :new, :locals => {
+    :site_name => settings.config['site_name'],
+  }
+end
+
+post '/get-formatted-text' do
+  File.open('/tmp/furry.md', 'w')
+  GitHub::Markup.render('/tmp/furry.md', params[:body])
+end
+
 get '/:slug' do
   filename = settings.config['snippets_folder'] + '/' + params[:slug] + '.md'
   snippet = {}
