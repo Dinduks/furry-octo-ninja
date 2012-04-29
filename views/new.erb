@@ -4,20 +4,20 @@
 %>
 
 <div class="span5">
-  <div class="form-vertical">
+  <form class="form-vertical well" method="post">
     <fieldset>
       <legend>New snippet</legend>
       <div class="control-group">
         <label class="control-label">
           Title
         </label>
-        <input type="text" name="title" id="title" />
+        <input type="text" name="title" id="title" value="<%= snippet.title %>" />
       </div>
       <div class="control-group">
         <label class="control-label">
           Content
         </label>
-        <textarea name="body" id="body" class="span5"></textarea>
+        <textarea name="body" id="body" class="span4"><%= snippet.body %></textarea>
       </div>
       <div class="control-group">
         <label class="control-label">
@@ -25,11 +25,11 @@
         </label>
         <input type="text" name="tags" id="tags" />
       </div>
-      <div class="form-actions">
+      <div class="">
         <input type="submit" class="btn-primary" name="submit" id="submit" value="Add" />
       </div>
     </fieldset>
-  </div>
+  </form>
 </div>
 
 <div class="span6 formatted-text-display">

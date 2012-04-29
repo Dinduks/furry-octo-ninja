@@ -1,0 +1,6 @@
+<% @alerts.each do |alert| %>
+<div class="alert alert-<%= alert[:type] %>">
+  <button class="close" data-dismiss="alert">×</button>
+  <%= alert[:message] %>
+</div>
+<% end %>
