@@ -50,7 +50,7 @@ post '/new' do
     tags = params[:tags].split(',')
     tags = [tags] unless tags.kind_of?(Array)
     tags.each_with_index do |tag, key|
-      t = Tag.new(:tag => tag.strip!)
+      t = Tag.new(:tag => tag.strip)
       if t.save
         tags[key] = t
       else
