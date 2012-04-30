@@ -39,9 +39,9 @@ post '/new' do
   @snippet.body  = params[:body]
 
   @alerts = []
-  @alerts << { type: :error, message: 'Fill in the title tag!' } if params[:title].to_s.empty?
-  @alerts << { type: :error, message: 'Fill in the content tag!' } if params[:body].to_s.empty?
-  erb :new, :locals => {
+  @alerts << { type: :error, message: 'Fill in the title field!' } if params[:title].to_s.empty?
+  @alerts << { type: :error, message: 'Fill in the content field!' } if params[:body].to_s.empty?
+  return erb :new, :locals => {
     :snippet   => @snippet,
     :site_name => settings.config['site_name'],
   } unless @alerts.empty?
@@ -57,9 +57,9 @@ post '/new' do
         tags[key] = Tag.first(:tag => tag)
       end
     end
+    @snippet.tags = tags
   end
 
-  @snippet.tags = tags
   @snippet.save
   redirect '/'
 end
