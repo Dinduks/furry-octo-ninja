@@ -12,7 +12,7 @@ describe "get /" do
 end
 
 describe "get /new" do
-  it "should load the add page" do
+  it "should display the add page" do
     get "/new"
     last_response.should be_ok
   end
@@ -37,5 +37,18 @@ describe "post /new" do
     last_response.should be_redirect
     follow_redirect!
     last_request.url.should include '/'
+  end
+
+  it "should insert the snippet and its tags in the database" do
+    lambda do
+      post "/new", params = {
+        :title => 'title',
+        :body  => 'body',
+        :tags  => 'hello, world',
+      }
+    end.should {
+      change(Snippet, :count).by(1)
+      change(Tag, :count).by(2)
+    }
   end
 end
