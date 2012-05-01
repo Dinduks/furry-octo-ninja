@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 require 'spec_helper'
 
 def app
@@ -60,5 +62,14 @@ describe "get /get-formatted-text" do
       :body => "# Hello"
     }
     last_response.body.should include "<h1>Hello</h1>"
+  end
+end
+
+describe "get /get-slug" do
+  it "should return the slugified string" do
+    get "/get-slug", params = {
+      :string => "Åh, räksmörgåsar!"
+    }
+    last_response.body.should == "ah-raksmorgasar"
   end
 end

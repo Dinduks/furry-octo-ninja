@@ -4,6 +4,7 @@ require 'rubygems'
 require 'data_mapper'
 require 'yaml'
 require 'github/markup'
+require 'stringex'
 require './models/snippet.rb'
 require './models/tag.rb'
 require './models/snippettag.rb'
@@ -36,6 +37,7 @@ end
 post '/new' do
   @snippet = Snippet.new
   @snippet.title = params[:title]
+  @snippet.slug  = params[:title].to_url
   @snippet.body  = params[:body]
 
   @alerts = []
@@ -67,6 +69,10 @@ end
 get '/get-formatted-text' do
   File.open('/tmp/furry.md', 'w')
   GitHub::Markup.render('/tmp/furry.md', params[:body])
+end
+
+get '/get-slug' do
+  params[:string].to_url
 end
 
 get '/:slug' do

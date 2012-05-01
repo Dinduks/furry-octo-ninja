@@ -99,3 +99,4 @@ DEPENDENCIES
   sinatra
   sinatra-contrib
   sqlite3
+  stringex
