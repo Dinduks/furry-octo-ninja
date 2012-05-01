@@ -13,6 +13,13 @@ describe "get /" do
   end
 end
 
+describe "get /404" do
+  it "should load the 404 error page" do
+    get "/404"
+    last_response.should be_ok
+  end
+end
+
 describe "get /new" do
   it "should display the add page" do
     get "/new"
@@ -71,5 +78,19 @@ describe "get /get-slug" do
       :string => "Åh, räksmörgåsar!"
     }
     last_response.body.should == "ah-raksmorgasar"
+  end
+end
+
+describe "get /:slug" do
+  it "should show the snippet's page" do
+    get "/hello"
+    last_response.should be_ok
+  end
+
+  it "should redirect to /404 if the snippet doesn't exist" do
+    get '/a-page-that-does-no-exist'
+    last_response.should be_redirect
+    follow_redirect!
+    last_request.url.should include '/404'
   end
 end

@@ -9,3 +9,7 @@ body {
 #body {
   height: 20em;
 }
+
+section {
+  padding-top: 20px;
+}

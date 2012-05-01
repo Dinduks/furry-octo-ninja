@@ -3,7 +3,17 @@
 @site_title = snippet[:title] + ' - ' + site_name
 @page_title = snippet[:title]
 %>
-<div id="wrapper">
+
+<header class="jumbotron subhead">
+  <h1><%= snippet[:title] %></h1>
+</header>
+
+<section class="snippet-body">
   <%= snippet[:body] %>
-</div>
-<div id="tags">Tags: <%= snippet[:tags] %></div>
+</section>
+
+<% unless snippet[:tags].to_s.empty? %>
+<section>
+  <div id="tags">Tags: <%= snippet[:tags] %></div>
+</section>
+<% end %>

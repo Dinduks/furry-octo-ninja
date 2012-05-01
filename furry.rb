@@ -9,6 +9,11 @@ require './models/snippet.rb'
 require './models/tag.rb'
 require './models/snippettag.rb'
 
+def get_formatted_text(string)
+  File.open('/tmp/furry.md', 'w')
+  GitHub::Markup.render('/tmp/furry.md', string)
+end
+
 configure do
   set :config, YAML.load_file('config.yml')
   DataMapper::setup(:default, "sqlite3://#{Dir.pwd}/furry.db")
@@ -26,6 +31,10 @@ get '/' do
   }
 end
 
+get '/404' do
+  erb :'404'
+end
+
 get '/new' do
   @snippet = Snippet.new
   erb :new, :locals => {
@@ -38,7 +47,7 @@ post '/new' do
   @snippet = Snippet.new
   @snippet.title = params[:title]
   @snippet.slug  = params[:title].to_url
-  @snippet.body  = params[:body]
+  @snippet.body  = get_formatted_text params[:body]
 
   @alerts = []
   @alerts << { type: :error, message: 'Fill in the title field!' } if params[:title].to_s.empty?
@@ -67,8 +76,7 @@ post '/new' do
 end
 
 get '/get-formatted-text' do
-  File.open('/tmp/furry.md', 'w')
-  GitHub::Markup.render('/tmp/furry.md', params[:body])
+  get_formatted_text params[:body]
 end
 
 get '/get-slug' do
@@ -76,14 +84,10 @@ get '/get-slug' do
 end
 
 get '/:slug' do
-  filename = settings.config['snippets_folder'] + '/' + params[:slug] + '.md'
-  snippet = {}
-  snippet[:title] = IO.readlines(filename)[1]
-  snippet[:tags]  = IO.readlines(filename)[2].split('-').trim
-  snippet[:body] = GitHub::Markup.render(filename, File.read(filename))
+  @snippet = Snippet.first(:slug => params[:slug])
+  redirect '/404' if @snippet.nil?
   erb :show, :locals => {
-    :snippet   => snippet,
-    :author    => settings.config['author_name'],
-    :site_name => settings.config['site_name'],
+    :snippet   => @snippet,
+    :site_name => settings.config['site_name']
   }
 end
