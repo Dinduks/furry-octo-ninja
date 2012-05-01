@@ -16,6 +16,7 @@ end
 
 configure do
   set :config, YAML.load_file('config.yml')
+  set :erb, :trim => '-'
   DataMapper::setup(:default, "sqlite3://#{Dir.pwd}/furry.db")
   DataMapper.finalize
   Snippet.auto_upgrade!
@@ -88,6 +89,14 @@ get '/:slug' do
   redirect '/404' if @snippet.nil?
   erb :show, :locals => {
     :snippet   => @snippet,
+    :site_name => settings.config['site_name']
+  }
+end
+
+get '/tag/:tag' do
+  @tag = Tag.first(:tag => params[:tag])
+  erb :show_tag, :locals => {
+    :tag       => @tag,
     :site_name => settings.config['site_name']
   }
 end

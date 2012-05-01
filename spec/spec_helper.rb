@@ -16,5 +16,7 @@ RSpec.configure do |config|
       :title => 'hello',
       :slug  => 'hello',
       :body  => 'hello world!'
-    ).save}
+    ).save
+    Tag.new(:tag => 'hello').save
+  }
 end

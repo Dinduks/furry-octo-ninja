@@ -12,7 +12,7 @@
     <td>
       Tags:
       <% snippet.tags.each do |t| %>
-        <%= t == snippet.tags[-1] ? t.tag : "#{t.tag}, " %>
+        <a href="/tag/<%= t.tag %>"><%= t.tag %></a><%= unless t == snippet.tags[-1] then ',' end %>
       <% end %>
     </td>
   </tr>

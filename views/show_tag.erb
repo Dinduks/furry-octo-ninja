@@ -1,0 +1,13 @@
+<%
+@site_name = site_name
+@site_title = '"' + tag.tag + '"' + " tag - " + site_name
+%>
+
+<h1>Snippets related to the "<%= tag.tag %>" tag</h1>
+<section>
+  <ul>
+    <% tag.snippets.each do |snippet| %>
+    <li><a href="/<%= snippet.slug %>"><%= snippet.title %></a></li>
+    <% end %>
+  </ul>
+</section>

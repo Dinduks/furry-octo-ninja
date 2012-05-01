@@ -94,3 +94,10 @@ describe "get /:slug" do
     last_request.url.should include '/404'
   end
 end
+
+describe "get /tag/hello" do
+  it "should load the tag's page" do
+    get "/tag/hello"
+    last_response.should be_ok
+  end
+end

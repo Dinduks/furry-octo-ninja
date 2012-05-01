@@ -12,8 +12,12 @@
   <%= snippet[:body] %>
 </section>
 
-<% unless snippet[:tags].to_s.empty? %>
+<% unless snippet.tags.empty? %>
 <section>
-  <div id="tags">Tags: <%= snippet[:tags] %></div>
+  <div id="tags">Tags:
+    <% snippet.tags.each do |tag| %>
+      <a href="/tag/<%= tag.tag %>"><%= tag.tag %></a><%= unless tag == snippet.tags[-1] then ',' end %>
+    <% end %>
+  </div>
 </section>
 <% end %>
