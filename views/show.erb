@@ -1,13 +1,19 @@
-<!DOCTYPE HTML>
-<html lang="en">
-<head>
-	<meta charset="UTF-8">
-	<title><%= snippet[:title] %></title>
-</head>
-<body>
-  <div id="wrapper">
-    <%= snippet[:body] %>
-  </div>
+<%
+@site_name  = site_name
+@site_title = snippet[:title] + ' - ' + site_name
+@page_title = snippet[:title]
+%>
+
+<header class="jumbotron subhead">
+  <h1><%= snippet[:title] %></h1>
+</header>
+
+<section class="snippet-body">
+  <%= snippet[:body] %>
+</section>
+
+<% unless snippet[:tags].to_s.empty? %>
+<section>
   <div id="tags">Tags: <%= snippet[:tags] %></div>
-</body>
-</html>
+</section>
+<% end %>

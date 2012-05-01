@@ -1,0 +1,30 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title><%= @site_title %></title>
+  <link rel="stylesheet" href="/stylesheets/bootstrap.min.css" />
+  <link rel="stylesheet" href="/stylesheets/main.css" />
+  <link rel="icon"       href="/images/favicon.png" />
+  <script type="text/javascript" src="/javascripts/jquery-1.7.2.min.js"></script>
+  <script type="text/javascript" src="/javascripts/bootstrap-alert.js"></script>
+</head>
+<body>
+  <div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+      <div class="container">
+        <a href="/" class="brand"><%= @site_name %></a>
+        <div class="nav-collapse">
+          <ul class="nav">
+            <li><a href="/new">Add</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="container">
+    <%= erb :alert unless @alerts.nil? %>
+    <%= yield %>
+  </div>
+</body>
+</html>

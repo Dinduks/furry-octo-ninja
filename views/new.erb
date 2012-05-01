@@ -1,0 +1,39 @@
+<%
+@site_title = 'New - ' + site_name
+@site_name  = site_name
+%>
+
+<div class="span5">
+  <form class="form-vertical well" method="post">
+    <fieldset>
+      <legend>New snippet</legend>
+      <div class="control-group">
+        <label class="control-label">
+          Title
+        </label>
+        <input type="text" name="title" id="title" value="<%= snippet.title %>" />
+      </div>
+      <div class="control-group">
+        <label class="control-label">
+          Content
+        </label>
+        <textarea name="body" id="body" class="span4"><%= snippet.body %></textarea>
+      </div>
+      <div class="control-group">
+        <label class="control-label">
+          Tags
+        </label>
+        <input type="text" name="tags" id="tags" />
+      </div>
+      <div class="">
+        <input type="submit" class="btn-primary" name="submit" id="submit" value="Add" />
+      </div>
+    </fieldset>
+  </form>
+</div>
+
+<div class="span6 formatted-text-display">
+
+</div>
+
+<script type="text/javascript" src="/javascripts/main.js"></script>

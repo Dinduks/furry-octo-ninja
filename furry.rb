@@ -1,38 +1,93 @@
 require 'sinatra/reloader'
 require 'sinatra'
+require 'rubygems'
+require 'data_mapper'
 require 'yaml'
 require 'github/markup'
+require 'stringex'
+require './models/snippet.rb'
+require './models/tag.rb'
+require './models/snippettag.rb'
+
+def get_formatted_text(string)
+  File.open('/tmp/furry.md', 'w')
+  GitHub::Markup.render('/tmp/furry.md', string)
+end
 
 configure do
   set :config, YAML.load_file('config.yml')
+  DataMapper::setup(:default, "sqlite3://#{Dir.pwd}/furry.db")
+  DataMapper.finalize
+  Snippet.auto_upgrade!
+  Tag.auto_upgrade!
+  SnippetTag.auto_upgrade!
 end
 
 get '/' do
-  snippets = []
-  Dir.foreach('snippets') do |s| 
-    next if s == '.' or s == '..'
-    filename = settings.config['snippets_folder'] + '/' + s
-    snippet = {}
-    snippet[:slug]  = s.slice(0..-4)
-    snippet[:title] = IO.readlines(filename)[1]
-    snippet[:tags]  = IO.readlines(filename)[2]
-    snippets << snippet
-  end
+  @snippets = Snippet.all
   erb :index, :locals => {
-    :site_title => settings.config['site_title'],
+    :site_name  => settings.config['site_name'],
     :author     => settings.config['author_name'],
-    :snippets   => snippets,
   }
 end
 
+get '/404' do
+  erb :'404'
+end
+
+get '/new' do
+  @snippet = Snippet.new
+  erb :new, :locals => {
+    :site_name => settings.config['site_name'],
+    :snippet   => @snippet,
+  }
+end
+
+post '/new' do
+  @snippet = Snippet.new
+  @snippet.title = params[:title]
+  @snippet.slug  = params[:title].to_url
+  @snippet.body  = get_formatted_text params[:body]
+
+  @alerts = []
+  @alerts << { type: :error, message: 'Fill in the title field!' } if params[:title].to_s.empty?
+  @alerts << { type: :error, message: 'Fill in the content field!' } if params[:body].to_s.empty?
+  return erb :new, :locals => {
+    :snippet   => @snippet,
+    :site_name => settings.config['site_name'],
+  } unless @alerts.empty?
+
+  unless params[:tags].to_s.empty?
+    tags = params[:tags].split(',')
+    tags = [tags] unless tags.kind_of?(Array)
+    tags.each_with_index do |tag, key|
+      t = Tag.new(:tag => tag.strip)
+      if t.save
+        tags[key] = t
+      else
+        tags[key] = Tag.first(:tag => tag)
+      end
+    end
+    @snippet.tags = tags
+  end
+
+  @snippet.save
+  redirect '/'
+end
+
+get '/get-formatted-text' do
+  get_formatted_text params[:body]
+end
+
+get '/get-slug' do
+  params[:string].to_url
+end
+
 get '/:slug' do
-  filename = settings.config['snippets_folder'] + '/' + params[:slug] + '.md'
-  snippet = {}
-  snippet[:title] = IO.readlines(filename)[1]
-  snippet[:tags]  = IO.readlines(filename)[2]
-  snippet[:body] = GitHub::Markup.render(filename, File.read(filename))
+  @snippet = Snippet.first(:slug => params[:slug])
+  redirect '/404' if @snippet.nil?
   erb :show, :locals => {
-    :snippet => snippet,
-    :author  => settings.config['author_name'],
+    :snippet   => @snippet,
+    :site_name => settings.config['site_name']
   }
 end

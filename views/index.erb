@@ -1,19 +1,20 @@
-<!DOCTYPE HTML>
-<html lang="en">
-<head>
-	<meta charset="UTF-8">
-  <title><%= site_title %></title>
-</head>
-<body>
-  <h1><%= site_title %></h1>
-  <ul>
-    <% snippets.each do |snippet| %>
-  	<li>
+<%
+@site_name = site_name
+@site_title = site_name
+%>
+<h1><%= site_name %></h1>
+<table class="table">
+  <% @snippets.each do |snippet| %>
+  <tr>
+    <td>
       <a href="/<%= snippet[:slug] %>"><%= snippet[:title] %></a>
-      <br />
-      Tags: <%= snippet[:tags] %>
-  	</li>
+    </td>
+    <td>
+      Tags:
+      <% snippet.tags.each do |t| %>
+        <%= t == snippet.tags[-1] ? t.tag : "#{t.tag}, " %>
+      <% end %>
+    </td>
+  </tr>
   <% end %>
-  </ul>
-</body>
-</html>
+</table>
