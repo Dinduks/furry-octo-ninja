@@ -64,7 +64,7 @@ post '/new' do
   redirect '/'
 end
 
-post '/get-formatted-text' do
+get '/get-formatted-text' do
   File.open('/tmp/furry.md', 'w')
   GitHub::Markup.render('/tmp/furry.md', params[:body])
 end

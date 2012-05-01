@@ -26,6 +26,7 @@ describe "post /new" do
       :tags  => '',
     }
     last_request.post?.should be_true
+    last_response.body.should include "alert-error"
   end
 
   it "should redirect to the homepage" do
@@ -50,5 +51,14 @@ describe "post /new" do
       change(Snippet, :count).by(1)
       change(Tag, :count).by(2)
     }
+  end
+end
+
+describe "get /get-formatted-text" do
+  it "should return the formatted text" do
+    get "/get-formatted-text", params = {
+      :body => "# Hello"
+    }
+    last_response.body.should include "<h1>Hello</h1>"
   end
 end

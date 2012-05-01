@@ -9,7 +9,7 @@ furry = {}
 furry.formatOnKeyUp = function() {
   $.ajax({
     url: '/get-formatted-text',
-    type: 'post',
+    type: 'get',
     data: { body: $('#body').val() },
     success: function(msg) {
       $('.formatted-text-display').html(msg);
