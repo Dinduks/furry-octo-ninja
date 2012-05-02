@@ -13,3 +13,11 @@ body {
 section {
   padding-top: 20px;
 }
+
+#username {
+  width: 8em;
+}
+
+#password {
+  width: 7em;
+}

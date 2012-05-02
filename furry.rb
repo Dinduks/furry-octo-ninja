@@ -41,22 +41,35 @@ get '/new' do
   erb :new, :locals => {
     :site_name => settings.config['site_name'],
     :snippet   => @snippet,
+    :tags      => '',
   }
 end
 
 post '/new' do
+  set :admin,  YAML.load_file('admin.yml')
+
   @snippet = Snippet.new
   @snippet.title = params[:title]
   @snippet.slug  = params[:title].to_url
-  @snippet.body  = get_formatted_text params[:body]
+  @tags          = params[:tags]
 
   @alerts = []
   @alerts << { type: :error, message: 'Fill in the title field!' } if params[:title].to_s.empty?
   @alerts << { type: :error, message: 'Fill in the content field!' } if params[:body].to_s.empty?
-  return erb :new, :locals => {
-    :snippet   => @snippet,
-    :site_name => settings.config['site_name'],
-  } unless @alerts.empty?
+  unless params[:password] == settings.admin['password'] and params[:password] == settings.admin['password']
+    @alerts << { type: :error, message: 'Wrong username or password!' }
+  end
+
+  unless @alerts.empty?
+    @snippet.body  = params[:body]
+    return erb :new, :locals => {
+      :snippet   => @snippet,
+      :tags      => @tags,
+      :site_name => settings.config['site_name'],
+    }
+  else
+    @snippet.body  = get_formatted_text params[:body]
+  end
 
   unless params[:tags].to_s.empty?
     tags = params[:tags].split(',')
@@ -66,7 +79,7 @@ post '/new' do
       if t.save
         tags[key] = t
       else
-        tags[key] = Tag.first(:tag => tag)
+        tags[key] = Tag.first(:tag => t.tag)
       end
     end
     @snippet.tags = tags
