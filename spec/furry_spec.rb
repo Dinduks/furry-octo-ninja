@@ -38,11 +38,24 @@ describe "post /new" do
     last_response.body.should include "alert-error"
   end
 
+  it "should fail because of wrong credentials" do
+    post "/new", params = {
+      :title    => 'body',
+      :body     => 'title',
+      :username => 'wrong-username',
+      :username => 'wrong-password',
+    }
+    last_request.post?.should be_true
+    last_response.body.should include "alert-error"
+  end
+
   it "should redirect to the homepage" do
     post "/new", params = {
-      :title => 'title',
-      :body  => 'body',
-      :tags  => '',
+      :title    => 'title',
+      :body     => 'body',
+      :tags     => '',
+      :username => 'username',
+      :password => 'password',
     }
     last_response.should be_redirect
     follow_redirect!

@@ -16,6 +16,7 @@ end
 
 configure do
   set :config, YAML.load_file('config.yml')
+  set :admin,  YAML.load_file('admin.yml')
   set :erb, :trim => '-'
   DataMapper::setup(:default, "sqlite3://#{Dir.pwd}/furry.db")
   DataMapper.finalize
@@ -46,8 +47,6 @@ get '/new' do
 end
 
 post '/new' do
-  set :admin,  YAML.load_file('admin.yml')
-
   @snippet = Snippet.new
   @snippet.title = params[:title]
   @snippet.slug  = params[:title].to_url
