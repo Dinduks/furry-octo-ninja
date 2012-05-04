@@ -54,8 +54,8 @@ describe "post /new" do
       :title    => 'title',
       :body     => 'body',
       :tags     => '',
-      :username => 'username',
-      :password => 'password',
+      :username => ENV['FURRY_USERNAME'],
+      :password => ENV['FURRY_PASSWORD'],
     }
     last_response.should be_redirect
     follow_redirect!

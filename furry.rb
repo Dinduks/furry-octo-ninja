@@ -10,14 +10,18 @@ require './models/tag.rb'
 require './models/snippettag.rb'
 
 def get_formatted_text(string)
-  File.open('/tmp/furry.md', 'w')
-  GitHub::Markup.render('/tmp/furry.md', string)
+  tmp_dir = ENV['TMP_DIR'] || '/tmp/'
+  File.open("#{tmp_dir}furry.md", 'w')
+  GitHub::Markup.render("#{tmp_dir}furry.md", string)
 end
 
 configure do
+  set :erb,    :trim => '-'
   set :config, YAML.load_file('config.yml')
-  set :admin,  YAML.load_file('admin.yml')
-  set :erb, :trim => '-'
+  settings.config['username'] = ENV['FURRY_USERNAME']
+  settings.config['password'] = ENV['FURRY_PASSWORD']
+  settings.config['tmp_dir']  = ENV['TMP_DIR']
+
   DataMapper::setup(:default, "sqlite3://#{Dir.pwd}/furry.db")
   DataMapper.finalize
   Snippet.auto_upgrade!
@@ -55,7 +59,7 @@ post '/new' do
   @alerts = []
   @alerts << { type: :error, message: 'Fill in the title field!' } if params[:title].to_s.empty?
   @alerts << { type: :error, message: 'Fill in the content field!' } if params[:body].to_s.empty?
-  unless params[:password] == settings.admin['password'] and params[:password] == settings.admin['password']
+  unless params[:password] == settings.config['password'] and params[:password] == settings.config['password']
     @alerts << { type: :error, message: 'Wrong username or password!' }
   end
 

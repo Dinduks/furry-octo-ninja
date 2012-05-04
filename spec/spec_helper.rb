@@ -3,8 +3,6 @@ require 'rack/test'
 
 RSpec.configure do |config|
   config.include Rack::Test::Methods
-  settings.admin['username'] = 'username'
-  settings.admin['password'] = 'password'
 
   config.before(:each) {
     DataMapper::setup(:default, "sqlite3://#{Dir.pwd}/furry_test.db")
