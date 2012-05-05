@@ -4,9 +4,8 @@ Installation:
 
 * Execute `bundle install`
 * Setup your credentials as environment variables: `FURRY_USERNAME` and `FURRY_PASSWORD`
-* Setup database info as environment variables also:
-    - To use a SQLite database: `FURRY_DB_ADAPTER=sqlite3`.
-    - To use a PostgreSQL database: `FURRY_DB_ADAPTER=postgres`, `FURRY_DB_NAME`, `FURRY_DB_HOST`, `FURRY_DB_USER` and `FURRY_DB_PASSWORD`.  
+* The application uses a SQLite database, if you want to use another RDBS, change `DATABASE_URL` environment variable to suit your needs.  
+Example: `DATABASE_URL=postgres://username:password@host:port/database_name`. Don't forget installing the DataMapper adapter for your RDBS.
 * Visit `/new` to add a new snippet
 
 Example of setting environment variables for local development on Unix systems:
