@@ -22,7 +22,11 @@ configure do
   settings.config['password'] = ENV['FURRY_PASSWORD']
   settings.config['tmp_dir']  = ENV['TMP_DIR']
 
-  DataMapper::setup(:default, "sqlite3://#{Dir.pwd}/furry.db")
+  if ENV['FURRY_DB_ADAPTER'] == 'sqlite3'
+    DataMapper::setup(:default, "sqlite3://#{Dir.pwd}/furry.db")
+  else
+    DataMapper::setup(:default, "#{ENV['FURRY_DB_ADAPTER']}://#{ENV['FURRY_DB_USER']}:#{ENV['FURRY_DB_PASSWORD']}@#{ENV['FURRY_DB_HOST']}/#{ENV['FURRY_DB_NAME']}")
+  end
   DataMapper.finalize
   Snippet.auto_upgrade!
   Tag.auto_upgrade!
