@@ -1,3 +1,5 @@
+[![Build Status](https://secure.travis-ci.org/Dinduks/furry-octo-ninja.png?branch=master)](http://travis-ci.org/Dinduks/furry-octo-ninja)
+
 This is the application I use to share my code snippets (you can call them mini-tutorials) at http://snippets.dinduks.com.
 
 Installation:
