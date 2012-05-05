@@ -8,5 +8,5 @@ class Snippet
   validates_presence_of   :title
   validates_uniqueness_of :slug
   validates_presence_of   :body
-  has n, :tags, :through => :snippettag
+  has n, :tags, :through => :snippettag, :constraint => :destroy
 end

@@ -114,3 +114,16 @@ describe "get /tag/hello" do
     last_response.should be_ok
   end
 end
+
+describe "get /:slug/delete" do
+  it "should delete the snippet" do
+    lambda do
+      get '/hello/delete'
+    end.should change(Snippet, :count).by(-1)
+  end
+
+  it "should redirect to the homepage" do
+    get '/hello/delete'
+    last_response.should be_redirect
+  end
+end

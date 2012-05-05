@@ -100,6 +100,15 @@ get '/get-slug' do
   params[:string].to_url
 end
 
+get '/:slug/delete' do
+  snippet = Snippet.first(:slug => params[:slug])
+  if snippet.nil?
+  else
+    snippet.destroy
+  end
+  redirect '/'
+end
+
 get '/:slug' do
   @snippet = Snippet.first(:slug => params[:slug])
   redirect '/404' if @snippet.nil?
