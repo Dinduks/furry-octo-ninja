@@ -62,17 +62,40 @@ describe "post /new" do
     last_request.url.should include '/'
   end
 
-  it "should insert the snippet and its tags in the database" do
+  it "should insert the snippet in the database" do
     lambda do
       post "/new", params = {
         :title => 'title',
         :body  => 'body',
-        :tags  => 'hello, world',
+        :tags  => '',
+        :username => ENV['FURRY_USERNAME'],
+        :password => ENV['FURRY_PASSWORD'],
       }
-    end.should {
-      change(Snippet, :count).by(1)
-      change(Tag, :count).by(2)
-    }
+    end.should change(Snippet, :count).by(1)
+  end
+
+  it "should not re-insert a tag in the database" do
+    lambda do
+      post "/new", params = {
+        :title => 'title',
+        :body  => 'body',
+        :tags  => 'hello',
+        :username => ENV['FURRY_USERNAME'],
+        :password => ENV['FURRY_PASSWORD'],
+      }
+    end.should change(Tag, :count).by(0)
+  end
+
+  it "should insert the snippet's tags in the database" do
+    lambda do
+      post "/new", params = {
+        :title => 'title',
+        :body  => 'body',
+        :tags  => 'tag1, tag2',
+        :username => ENV['FURRY_USERNAME'],
+        :password => ENV['FURRY_PASSWORD'],
+      }
+    end.should change(Tag, :count).by(2)
   end
 end
 
@@ -101,7 +124,7 @@ describe "get /:slug" do
   end
 
   it "should redirect to /404 if the snippet doesn't exist" do
-    get '/a-page-that-does-no-exist'
+    get '/a-page-that-does-not-exist'
     last_response.should be_redirect
     follow_redirect!
     last_request.url.should include '/404'
@@ -125,5 +148,12 @@ describe "get /:slug/delete" do
   it "should redirect to the homepage" do
     get '/hello/delete'
     last_response.should be_redirect
+  end
+
+  it "should redirect to the homepage and display an alert if the snippet doesn't exist" do
+    get '/a-page-that-does-not-exist/delete'
+    last_response.should be_redirect
+    follow_redirect!
+    last_response.body.should include 'notice'
   end
 end
