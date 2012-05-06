@@ -38,7 +38,7 @@ describe "post /new" do
     last_response.body.should include "alert-error"
   end
 
-  it "should fail because of wrong credentials" do
+  it "should fail if the credentials are wrong" do
     post "/new", params = {
       :title    => 'body',
       :body     => 'title',
@@ -74,18 +74,6 @@ describe "post /new" do
     end.should change(Snippet, :count).by(1)
   end
 
-  it "should not re-insert a tag in the database" do
-    lambda do
-      post "/new", params = {
-        :title => 'title',
-        :body  => 'body',
-        :tags  => 'hello',
-        :username => ENV['FURRY_USERNAME'],
-        :password => ENV['FURRY_PASSWORD'],
-      }
-    end.should change(Tag, :count).by(0)
-  end
-
   it "should insert the snippet's tags in the database" do
     lambda do
       post "/new", params = {
@@ -96,6 +84,18 @@ describe "post /new" do
         :password => ENV['FURRY_PASSWORD'],
       }
     end.should change(Tag, :count).by(2)
+  end
+
+  it "should not re-insert a tag in the database" do
+    lambda do
+      post "/new", params = {
+        :title => 'title',
+        :body  => 'body',
+        :tags  => 'hello',
+        :username => ENV['FURRY_USERNAME'],
+        :password => ENV['FURRY_PASSWORD'],
+      }
+    end.should change(Tag, :count).by(0)
   end
 end
 
@@ -139,15 +139,9 @@ describe "get /tag/hello" do
 end
 
 describe "get /:slug/delete" do
-  it "should delete the snippet" do
-    lambda do
-      get '/hello/delete'
-    end.should change(Snippet, :count).by(-1)
-  end
-
-  it "should redirect to the homepage" do
+  it "should show the snippet's delete page" do
     get '/hello/delete'
-    last_response.should be_redirect
+    last_response.should be_ok
   end
 
   it "should redirect to the homepage and display an alert if the snippet doesn't exist" do
@@ -157,3 +151,43 @@ describe "get /:slug/delete" do
     last_response.body.should include 'notice'
   end
 end
+
+describe "post /:slug/delete" do
+  it "should fail and display an error message if the snippet doesn't exist" do
+    post '/a-page-that-does-not-exist/delete'
+    last_response.should be_redirect
+    follow_redirect!
+    last_response.body.should include 'notice'
+  end
+
+  it "should display an error message if the credentials are wrong" do
+    post '/hello/delete', params = {
+      :username => 'wrong-username',
+      :username => 'wrong-password',
+    }
+    last_response.should be_redirect
+    last_request.url.should include "hello/delete"
+    follow_redirect!
+    last_response.body.should include 'error'
+  end
+
+  it "should remove the snippet from the database" do
+    lambda do
+      post '/hello/delete', params = {
+        :username => ENV['FURRY_USERNAME'],
+        :password => ENV['FURRY_PASSWORD'],
+      }
+    end.should change(Snippet, :count).by(-1)
+  end
+
+  it "should redirect to the homepage" do
+    post '/hello/delete', params = {
+      :username => ENV['FURRY_USERNAME'],
+      :password => ENV['FURRY_PASSWORD'],
+    }
+    last_response.should be_redirect
+    follow_redirect!
+    last_response.should be_ok
+  end
+end
+

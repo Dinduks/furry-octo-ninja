@@ -1,0 +1,21 @@
+<%
+@site_title = 'New - ' + site_name
+@site_name  = site_name
+%>
+
+<p>
+  Please enter your username and password to delete <strong><%= snippet.title %></strong>
+</p>
+<div class="span4">
+  <form class="form-vertical well" method="post">
+    <fieldset>
+      <div>
+        <input class="span2" type="text" id="username" name="username" placeholder="Username" />
+      </div>
+      <div>
+        <input class="span2" type="password" id="password" name="password" placeholder="Password" />
+        <input type="submit" class="btn-primary" name="submit" id="submit" value="Delete" />
+      </div>
+    </fieldset>
+  </form>
+</div>

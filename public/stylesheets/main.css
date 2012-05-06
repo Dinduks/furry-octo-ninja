@@ -14,10 +14,10 @@ section {
   padding-top: 20px;
 }
 
-#username {
+.new #username {
   width: 8em;
 }
 
-#password {
+.new #password {
   width: 7em;
 }

@@ -111,7 +111,24 @@ get '/:slug/delete' do
   snippet = Snippet.first(:slug => params[:slug])
   if snippet.nil?
     session[:alerts] << { type: :notice,  message: "This snippet doesn't exist!" }
+    redirect '/'
   else
+    erb :delete, :locals => {
+      :snippet   => snippet,
+      :site_name => settings.config['site_name']
+    }
+  end
+end
+
+post '/:slug/delete' do
+  snippet = Snippet.first(:slug => params[:slug])
+  if snippet.nil?
+    session[:alerts] << { type: :notice,  message: "This snippet doesn't exist!" }
+  else
+    unless params[:password] == settings.config['password'] and params[:password] == settings.config['password']
+      session[:alerts] << { type: :error, message: 'Wrong username or password!' }
+      redirect "/#{params[:slug]}/delete"
+    end
     session[:alerts] << { type: :success, message: "Snippet successfully deleted!" }
     snippet.destroy
   end
