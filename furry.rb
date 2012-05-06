@@ -21,12 +21,18 @@ configure do
   settings.config['username'] = ENV['FURRY_USERNAME']
   settings.config['password'] = ENV['FURRY_PASSWORD']
   settings.config['tmp_dir']  = ENV['TMP_DIR']
+  enable :sessions
 
   DataMapper::setup(:default, ENV['DATABASE_URL'] || "sqlite3://#{Dir.pwd}/furry.db")
   DataMapper.finalize
   Snippet.auto_upgrade!
   Tag.auto_upgrade!
   SnippetTag.auto_upgrade!
+end
+
+before do
+  @alerts = (@alerts ||= []) | (session[:alerts] ||= [])
+  session[:alerts] = []
 end
 
 get '/' do
@@ -70,9 +76,9 @@ post '/new' do
       :tags      => @tags,
       :site_name => settings.config['site_name'],
     }
-  else
-    @snippet.body  = get_formatted_text params[:body]
   end
+
+  @snippet.body  = get_formatted_text params[:body]
 
   unless params[:tags].to_s.empty?
     tags = params[:tags].split(',')
@@ -89,6 +95,7 @@ post '/new' do
   end
 
   @snippet.save
+  session[:alerts] << { type: :success, message: 'Snippet successfully added!' }
   redirect '/'
 end
 
@@ -103,7 +110,9 @@ end
 get '/:slug/delete' do
   snippet = Snippet.first(:slug => params[:slug])
   if snippet.nil?
+    session[:alerts] << { type: :notice,  message: "This snippet doesn't exist!" }
   else
+    session[:alerts] << { type: :success, message: "Snippet successfully deleted!" }
     snippet.destroy
   end
   redirect '/'
