@@ -53,6 +53,7 @@ get '/new' do
     :site_name => settings.config['site_name'],
     :snippet   => @snippet,
     :tags      => '',
+    :action    => 'Add',
   }
 end
 
@@ -128,6 +129,41 @@ post '/:slug/delete' do
     unless params[:password] == settings.config['password'] and params[:password] == settings.config['password']
       session[:alerts] << { type: :error, message: 'Wrong username or password!' }
       redirect "/#{params[:slug]}/delete"
+    end
+    session[:alerts] << { type: :success, message: "Snippet successfully deleted!" }
+    snippet.destroy
+  end
+  redirect '/'
+end
+
+get '/:slug/edit' do
+  snippet = Snippet.first(:slug => params[:slug])
+  if snippet.nil?
+    session[:alerts] << { type: :notice,  message: "This snippet doesn't exist!" }
+    redirect '/'
+  else
+    tags = ''
+    snippet.tags.each do |tag|
+      tags += tag.tag
+      tags += ', ' unless tag == snippet.tags[-1]
+    end
+    erb :new, :locals => {
+      :snippet   => snippet,
+      :tags      => tags,
+      :site_name => settings.config['site_name'],
+      :action    => 'Edit'
+    }
+  end
+end
+
+post '/:slug/edit' do
+  snippet = Snippet.first(:slug => params[:slug])
+  if snippet.nil?
+    session[:alerts] << { type: :notice,  message: "This snippet doesn't exist!" }
+  else
+    unless params[:password] == settings.config['password'] and params[:password] == settings.config['password']
+      session[:alerts] << { type: :error, message: 'Wrong username or password!' }
+      redirect "/#{params[:slug]}/edit"
     end
     session[:alerts] << { type: :success, message: "Snippet successfully deleted!" }
     snippet.destroy
