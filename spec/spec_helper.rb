@@ -14,11 +14,20 @@ RSpec.configure do |config|
     SnippetTag.auto_migrate!
 
     # Create some "fixture" data in the db
-    Snippet.new(
+    tag10 = Tag.new(:tag => 'tag10')
+    tag20 = Tag.new(:tag => 'tag20')
+    tag10.save
+    tag20.save
+
+    s = Snippet.new(
       :title => 'hello',
       :slug  => 'hello',
       :body  => 'hello world!'
-    ).save
+    )
+    s.tags << tag10
+    s.tags << tag20
+    s.save
+
     Tag.new(:tag => 'hello').save
   }
 end

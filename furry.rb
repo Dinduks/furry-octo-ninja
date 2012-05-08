@@ -61,6 +61,7 @@ post '/new' do
   @snippet = Snippet.new
   @snippet.title = params[:title]
   @snippet.slug  = params[:title].to_url
+  @snippet.body  = params[:body]
   @tags          = params[:tags]
 
   @alerts = []
@@ -71,15 +72,13 @@ post '/new' do
   end
 
   unless @alerts.empty?
-    @snippet.body  = params[:body]
     return erb :new, :locals => {
       :snippet   => @snippet,
       :tags      => @tags,
       :site_name => settings.config['site_name'],
+      :action    => 'New'
     }
   end
-
-  @snippet.body  = get_formatted_text params[:body]
 
   unless params[:tags].to_s.empty?
     tags = params[:tags].split(',')
@@ -151,29 +150,76 @@ get '/:slug/edit' do
       :snippet   => snippet,
       :tags      => tags,
       :site_name => settings.config['site_name'],
-      :action    => 'Edit'
+      :action    => 'Edit',
     }
   end
 end
 
 post '/:slug/edit' do
   snippet = Snippet.first(:slug => params[:slug])
+
   if snippet.nil?
     session[:alerts] << { type: :notice,  message: "This snippet doesn't exist!" }
-  else
-    unless params[:password] == settings.config['password'] and params[:password] == settings.config['password']
-      session[:alerts] << { type: :error, message: 'Wrong username or password!' }
-      redirect "/#{params[:slug]}/edit"
-    end
-    session[:alerts] << { type: :success, message: "Snippet successfully deleted!" }
-    snippet.destroy
+    redirect '/'
   end
+
+  @alerts = []
+
+  # title validation
+  unless params[:title].to_s.empty?
+    snippet.title = params[:title]
+    snippet.slug  = params[:title].to_url
+  else
+    @alerts << { type: :error, message: 'The title field cannot be empty!' }
+  end
+
+  # body validation
+  unless params[:body].to_s.empty?
+    snippet.body  = params[:body]
+  else
+    @alerts << { type: :error, message: "The snippet's body cannot be empty!" }
+  end
+
+  # credentials validation
+  unless params[:password] == settings.config['password'] and params[:password] == settings.config['password']
+    @alerts << { type: :error, message: 'Wrong username or password!' }
+  end
+
+  # if there's any alert
+  unless @alerts.empty?
+    return erb :new, :locals => {
+      :snippet   => snippet,
+      :tags      => @tags,
+      :site_name => settings.config['site_name'],
+      :action    => 'Edit',
+    }
+  end
+
+  if params[:tags].to_s.empty?
+    snippet.tags = []
+  else
+    tags = params[:tags].split(',')
+    tags = [tags] unless tags.kind_of?(Array)
+    tags.each_with_index do |tag, key|
+      t = Tag.new(:tag => tag.strip)
+      if t.save
+        tags[key] = t
+      else
+        tags[key] = Tag.first(:tag => t.tag)
+      end
+    end
+    snippet.tags = tags
+  end
+
+  snippet.save
+  session[:alerts] << { type: :success, message: "The snippet was successfully updated!" }
   redirect '/'
 end
 
 get '/:slug' do
   @snippet = Snippet.first(:slug => params[:slug])
   redirect '/404' if @snippet.nil?
+  @snippet.body = get_formatted_text @snippet.body
   erb :show, :locals => {
     :snippet   => @snippet,
     :site_name => settings.config['site_name']

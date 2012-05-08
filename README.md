@@ -18,4 +18,5 @@ I suggest saving these in your `~/.bashrc` file.
 
 ##### Use
 * Visit `/new` to add a new snippet
+* Visit `/:snippet/edit` to edit it
 * Visit `/:snippet/delete` to delete it
