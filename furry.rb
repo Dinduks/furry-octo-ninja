@@ -80,19 +80,7 @@ post '/new' do
     }
   end
 
-  unless params[:tags].to_s.empty?
-    tags = params[:tags].split(',')
-    tags = [tags] unless tags.kind_of?(Array)
-    tags.each_with_index do |tag, key|
-      t = Tag.new(:tag => tag.strip)
-      if t.save
-        tags[key] = t
-      else
-        tags[key] = Tag.first(:tag => t.tag)
-      end
-    end
-    @snippet.tags = tags
-  end
+  @snippet.add_tags params[:tags] unless params[:tags].to_s.empty?
 
   @snippet.save
   session[:alerts] << { type: :success, message: 'Snippet successfully added!' }
@@ -198,17 +186,7 @@ post '/:slug/edit' do
   if params[:tags].to_s.empty?
     snippet.tags = []
   else
-    tags = params[:tags].split(',')
-    tags = [tags] unless tags.kind_of?(Array)
-    tags.each_with_index do |tag, key|
-      t = Tag.new(:tag => tag.strip)
-      if t.save
-        tags[key] = t
-      else
-        tags[key] = Tag.first(:tag => t.tag)
-      end
-    end
-    snippet.tags = tags
+    snippet.add_tags params[:tags] unless params[:tags].to_s.empty?
   end
 
   snippet.save
