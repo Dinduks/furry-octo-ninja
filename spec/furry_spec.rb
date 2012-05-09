@@ -13,13 +13,6 @@ describe "get /" do
   end
 end
 
-describe "get /404" do
-  it "should load the 404 error page" do
-    get "/404"
-    last_response.should be_ok
-  end
-end
-
 describe "get /new" do
   it "should display the add page" do
     get "/new"
@@ -123,11 +116,12 @@ describe "get /:slug" do
     last_response.should be_ok
   end
 
-  it "should redirect to /404 if the snippet doesn't exist" do
+  it "should redirect to the homepage and display an alert if the snippet doesn't exist" do
     get '/a-page-that-does-not-exist'
     last_response.should be_redirect
     follow_redirect!
-    last_request.url.should include '/404'
+    last_response.should be_ok
+    last_request.url.should =~ /\/$/
   end
 end
 

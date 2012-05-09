@@ -43,10 +43,6 @@ get '/' do
   }
 end
 
-get '/404' do
-  erb :'404'
-end
-
 get '/new' do
   @snippet = Snippet.new
   erb :new, :locals => {
@@ -196,7 +192,10 @@ end
 
 get '/:slug' do
   @snippet = Snippet.first(:slug => params[:slug])
-  redirect '/404' if @snippet.nil?
+  if @snippet.nil?
+    session[:alerts] << { type: :notice, message: 'Snippet not found!' }
+    redirect '/'
+  end
   @snippet.body = get_formatted_text @snippet.body
   erb :show, :locals => {
     :snippet   => @snippet,
