@@ -1,8 +1,11 @@
 GEM
   remote: https://rubygems.org/
   specs:
+    activesupport (3.2.3)
+      i18n (~> 0.6)
+      multi_json (~> 1.0)
     addressable (2.2.8)
-    backports (2.5.1)
+    backports (2.5.3)
     bcrypt-ruby (3.0.1)
     data_mapper (1.2.0)
       dm-aggregates (~> 1.2.0)
@@ -59,8 +62,11 @@ GEM
     do_sqlite3 (0.10.8)
       data_objects (= 0.10.8)
     eventmachine (0.12.10)
+    factory_girl (3.2.0)
+      activesupport (>= 3.0.0)
     fastercsv (1.5.4)
     github-markup (0.7.2)
+    i18n (0.6.0)
     json (1.6.7)
     json_pure (1.6.7)
     multi_json (1.0.4)
@@ -106,6 +112,7 @@ DEPENDENCIES
   data_mapper (~> 1.2.0)
   dm-postgres-adapter
   dm-sqlite-adapter
+  factory_girl
   github-markup
   rake
   redcarpet

@@ -11,3 +11,4 @@ gem 'dm-sqlite-adapter'
 gem 'dm-postgres-adapter'
 gem 'rspec'
 gem 'simplecov', :require => false, :group => :test
+gem 'factory_girl'

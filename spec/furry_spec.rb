@@ -52,7 +52,7 @@ describe "post /new" do
     }
     last_response.should be_redirect
     follow_redirect!
-    last_request.url.should =~ /\/$/ 
+    last_request.url.should =~ /\/$/
   end
 
   it "should insert the snippet in the database" do
@@ -80,10 +80,12 @@ describe "post /new" do
   end
 
   it "should not re-insert a tag in the database" do
+    @basic_snippet.tags <<  @basic_tag
+    @basic_snippet.save
     lambda do
       post "/new", params = {
-        :title => 'title',
-        :body  => 'body',
+        :title => 'hello',
+        :body  => 'hello world',
         :tags  => 'hello',
         :username => ENV['FURRY_USERNAME'],
         :password => ENV['FURRY_PASSWORD'],
@@ -189,6 +191,8 @@ end
 
 describe "get /:slug/edit" do
   it "should display the edition page" do
+    @basic_snippet.tags << @basic_tag
+    @basic_snippet.save
     get "/hello/edit"
     last_response.should be_ok
     last_request.url.should include '/hello/edit'
