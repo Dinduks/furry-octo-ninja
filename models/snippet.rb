@@ -21,6 +21,6 @@ class Snippet
         tags[key] = Tag.first(:tag => t.tag)
       end
     end
-    self.tags = tags
+    self.tags = self.tags | tags
   end
 end

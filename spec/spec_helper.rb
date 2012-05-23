@@ -15,7 +15,7 @@ RSpec.configure do |config|
     Tag.auto_migrate!
     SnippetTag.auto_migrate!
 
-    @basic_snippet = FactoryGirl.create(:basic_snippet)
     @basic_tag     = FactoryGirl.create(:basic_tag)
+    @basic_snippet = FactoryGirl.create(:basic_snippet, :tags => [@basic_tag])
   }
 end
