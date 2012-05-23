@@ -1,8 +1,8 @@
 class Snippet
   include DataMapper::Resource
   property :id, Serial
-  property :title, String
-  property :slug, String
+  property :title, String, :length => 255
+  property :slug, String, :length => 255
   property :body, Text
   property :created_at, DateTime
   validates_presence_of   :title
