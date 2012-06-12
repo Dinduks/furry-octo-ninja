@@ -36,7 +36,7 @@ before do
 end
 
 get '/' do
-  @snippets = Snippet.all
+  @snippets = Snippet.all(:order => :created_at.desc)
   erb :index, :locals => {
     :site_name  => settings.config['site_name'],
     :author     => settings.config['author_name'],
