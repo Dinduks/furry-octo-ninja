@@ -70,6 +70,7 @@ GEM
     json (1.6.7)
     json_pure (1.6.7)
     multi_json (1.0.4)
+    nyan-cat-formatter (0.0.7)
     rack (1.4.1)
     rack-protection (1.2.0)
       rack
@@ -114,6 +115,7 @@ DEPENDENCIES
   dm-sqlite-adapter
   factory_girl
   github-markup
+  nyan-cat-formatter
   rake
   redcarpet
   rspec

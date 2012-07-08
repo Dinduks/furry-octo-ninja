@@ -10,5 +10,9 @@ gem 'sqlite3'
 gem 'dm-sqlite-adapter'
 gem 'dm-postgres-adapter'
 gem 'rspec'
-gem 'simplecov', :require => false, :group => :test
 gem 'factory_girl'
+
+group :test do
+  gem 'simplecov'
+  gem 'nyan-cat-formatter'
+end
