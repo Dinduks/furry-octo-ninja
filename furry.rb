@@ -1,10 +1,6 @@
-require 'sinatra/reloader'
-require 'sinatra'
-require 'rubygems'
-require 'data_mapper'
-require 'yaml'
-require 'github/markup'
-require 'stringex'
+require 'bundler'
+Bundler.require
+
 require './models/snippet.rb'
 require './models/tag.rb'
 require './models/snippettag.rb'
