@@ -1,5 +1,6 @@
 source 'https://rubygems.org'
 
+gem 'rake'
 gem 'sinatra'
 gem 'github-markup', :require => 'github/markup'
 gem 'redcarpet'
