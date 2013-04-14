@@ -19,3 +19,7 @@ Example: `DATABASE_URL=postgres://username:password@host:port/database_name`. Do
 * Visit `/new` to add a new snippet
 * Visit `/:snippet/edit` to edit it
 * Visit `/:snippet/delete` to delete it
+
+##### Google Analytics
+If you want to use Google Analytics, simply set the `GA_TRACKING_CODE` and `GA_SITE`
+environment variables.
