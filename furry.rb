@@ -197,7 +197,7 @@ post '/:slug/edit' do
 
   snippet.save
   session[:alerts] << { type: :success, message: "The snippet was successfully updated!" }
-  redirect '/'
+  redirect "/#{params[:slug]}"
 end
 
 get '/:slug' do
