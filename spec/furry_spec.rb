@@ -55,16 +55,35 @@ describe "post /new" do
     last_request.url.should =~ /\/$/
   end
 
-  it "should insert the snippet in the database" do
-    lambda do
-      post "/new", params = {
-        :title => 'title',
-        :body  => 'body',
-        :tags  => '',
-        :username => ENV['FURRY_USERNAME'],
-        :password => ENV['FURRY_PASSWORD'],
-      }
-    end.should change(Snippet, :count).by(1)
+  describe "insertion" do
+    before do
+      @insertion_request = lambda do
+        post "/new", params = {
+          :title => 'title',
+          :body  => 'body',
+          :tags  => '',
+          :slug => 'slug',
+          :username => ENV['FURRY_USERNAME'],
+          :password => ENV['FURRY_PASSWORD'],
+        }
+      end
+    end
+
+    it "should add the snippets to the database" do
+      @insertion_request.should change(Snippet, :count).by(1)
+    end
+
+    it "should save the title" do
+      @insertion_request.call
+      snippet = Snippet.first(:title => 'title')
+      snippet.should_not be_nil
+    end
+
+    it "should save the body" do
+      @insertion_request.call
+      snippet = Snippet.first(:body => 'body')
+      snippet.should_not be_nil
+    end
   end
 
   it "should insert the snippet's tags in the database" do
