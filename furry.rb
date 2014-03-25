@@ -17,8 +17,6 @@ configure do
   settings.config['username'] = ENV['FURRY_USERNAME']
   settings.config['password'] = ENV['FURRY_PASSWORD']
   settings.config['tmp_dir']  = ENV['TMP_DIR']
-  settings.config['ga_tracking_code'] = ENV['GA_TRACKING_CODE']
-  settings.config['ga_site']          = ENV['GA_SITE']
   enable :sessions
 
   DataMapper::setup(:default, ENV['DATABASE_URL'] || "sqlite3://#{Dir.pwd}/furry.db")
@@ -38,8 +36,6 @@ get '/' do
   erb :index, :locals => {
     :site_name  => settings.config['site_name'],
     :author     => settings.config['author_name'],
-    :ga_tracking_code => settings.config['ga_tracking_code'],
-    :ga_site          => settings.config['ga_site']
   }
 end
 
@@ -50,8 +46,6 @@ get '/new' do
     :snippet   => @snippet,
     :tags      => '',
     :action    => 'Add',
-    :ga_tracking_code => settings.config['ga_tracking_code'],
-    :ga_site          => settings.config['ga_site']
   }
 end
 
@@ -74,9 +68,7 @@ post '/new' do
       :snippet   => @snippet,
       :tags      => @tags,
       :site_name => settings.config['site_name'],
-      :action    => 'New',
-      :ga_tracking_code => settings.config['ga_tracking_code'],
-      :ga_site          => settings.config['ga_site']
+      :action    => 'New'
     }
   end
 
@@ -103,9 +95,7 @@ get '/:slug/delete' do
   else
     erb :delete, :locals => {
       :snippet   => snippet,
-      :site_name => settings.config['site_name'],
-      :ga_tracking_code => settings.config['ga_tracking_code'],
-      :ga_site          => settings.config['ga_site']
+      :site_name => settings.config['site_name']
     }
   end
 end
@@ -141,8 +131,6 @@ get '/:slug/edit' do
       :tags      => tags,
       :site_name => settings.config['site_name'],
       :action    => 'Edit',
-      :ga_tracking_code => settings.config['ga_tracking_code'],
-      :ga_site          => settings.config['ga_site']
     }
   end
 end
@@ -184,8 +172,6 @@ post '/:slug/edit' do
       :tags      => @tags,
       :site_name => settings.config['site_name'],
       :action    => 'Edit',
-      :ga_tracking_code => settings.config['ga_tracking_code'],
-      :ga_site          => settings.config['ga_site']
     }
   end
 
@@ -209,9 +195,7 @@ get '/:slug' do
   @snippet.body = get_formatted_text @snippet.body
   erb :show, :locals => {
     :snippet   => @snippet,
-    :site_name => settings.config['site_name'],
-    :ga_tracking_code => settings.config['ga_tracking_code'],
-    :ga_site          => settings.config['ga_site']
+    :site_name => settings.config['site_name']
   }
 end
 
@@ -219,8 +203,6 @@ get '/tag/:tag' do
   @tag = Tag.first(:tag => params[:tag])
   erb :show_tag, :locals => {
     :tag       => @tag,
-    :site_name => settings.config['site_name'],
-    :ga_tracking_code => settings.config['ga_tracking_code'],
-    :ga_site          => settings.config['ga_site']
+    :site_name => settings.config['site_name']
   }
 end
